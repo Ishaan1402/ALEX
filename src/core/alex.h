@@ -652,14 +652,17 @@ class Alex {
     stats_.num_keys = num_keys;
 
     // Build temporary root model, which outputs a CDF in the range [0, 1]
+    std::cout << "Creating temporary root model..." << std::endl;
     root_node_ =
         new (model_node_allocator().allocate(1)) model_node_type(0, allocator_);
     T min_key = values[0].first;
     T max_key = values[num_keys - 1].first;
     root_node_->model_.a_ = 1.0 / (max_key - min_key);
     root_node_->model_.b_ = -1.0 * min_key * root_node_->model_.a_;
+      std::cout << "Created temporary root model" << std::endl;
 
     // Compute cost of root node
+    std::cout << "Calculating cost of root node..." << std::endl;
     LinearModel<T> root_data_node_model;
     data_node_type::build_model(values, num_keys, &root_data_node_model,
                                 params_.approximate_model_computation);
@@ -668,8 +671,10 @@ class Alex {
         values, num_keys, data_node_type::kInitDensity_,
         params_.expected_insert_frac, &root_data_node_model,
         params_.approximate_cost_computation, &stats);
+    std::cout << "Calculated cost of root node" << std::endl;
 
     // Recursively bulk load
+    std::cout << "Recursively bulk load Start" << std::endl;
     bulk_load_node(values, num_keys, root_node_, num_keys,
                    &root_data_node_model);
 
@@ -679,10 +684,13 @@ class Alex {
       static_cast<data_node_type*>(root_node_)->expected_avg_shifts_ =
           stats.num_shifts;
     }
-
+    std::cout << "Creating superroot" << std::endl;
     create_superroot();
     update_superroot_key_domain();
+    std::cout << "Created superroot" << std::endl;
+    std::cout << "Linking data nodes..." << std::endl;
     link_all_data_nodes();
+    std::cout << "Linked data nodes" << std::endl;
   }
 
  private:

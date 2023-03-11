@@ -68,7 +68,9 @@ int main(int argc, char* argv[]) {
   alex::Alex<KEY_TYPE, PAYLOAD_TYPE> index;
   std::sort(values, values + init_num_keys,
             [](auto const& a, auto const& b) { return a.first < b.first; });
+  std::cout << "Starting bulk load" << std::endl;
   index.bulk_load(values, init_num_keys);
+  std::cout << "Ended bulk load" << std::endl;
 
   // Run workload
   int i = init_num_keys;
