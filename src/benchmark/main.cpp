@@ -46,7 +46,10 @@ int main(int argc, char* argv[]) {
 
   // Read keys from file
   auto keys = new KEY_TYPE[total_num_keys];
+  std::cout << "Starting to load data from file path: \"" + keys_file_path + "\"..." << std::endl;
+  std::cout << "File type: " + keys_file_type << std::endl;
   if (keys_file_type == "binary") {
+    std::cout << "Loading..." << std::endl;
     load_binary_data(keys, total_num_keys, keys_file_path);
   } else if (keys_file_type == "text") {
     load_text_data(keys, total_num_keys, keys_file_path);
@@ -55,6 +58,7 @@ int main(int argc, char* argv[]) {
               << std::endl;
     return 1;
   }
+  std::cout << "Finished loading data from file path: \"" + keys_file_path + "\"" << std::endl;
 
   // Combine bulk loaded keys with randomly generated payloads
   auto values = new std::pair<KEY_TYPE, PAYLOAD_TYPE>[init_num_keys];
@@ -68,7 +72,7 @@ int main(int argc, char* argv[]) {
   alex::Alex<KEY_TYPE, PAYLOAD_TYPE> index;
   std::sort(values, values + init_num_keys,
             [](auto const& a, auto const& b) { return a.first < b.first; });
-  std::cout << "Starting bulk load" << std::endl;
+  std::cout << "Starting bulk load..." << std::endl;
   index.bulk_load(values, init_num_keys);
   std::cout << "Ended bulk load" << std::endl;
 
