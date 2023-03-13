@@ -17,6 +17,9 @@ bool load_binary_data(T data[], int length, const std::string& file_path) {
 template <class T>
 bool load_text_data(T array[], int length, const std::string& file_path) {
   std::ifstream is(file_path.c_str());
+  if(is.good()){
+      std::cout << "The state of this stream is good (no eofbit, badbit, failbit)" << std::endl;
+  }
   if (!is.is_open()) {
     return false;
   }
