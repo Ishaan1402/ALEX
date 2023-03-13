@@ -7,10 +7,19 @@ template <class T>
 bool load_binary_data(T data[], int length, const std::string& file_path) {
   std::ifstream is(file_path.c_str(), std::ios::binary | std::ios::in);
     if(is.good()){
-        std::cout << "The state of this stream is good (no eofbit, badbit, failbit)" << std::endl;
+        std::cout << "Binary: The state of this stream is good (goodbit)" << std::endl;
+    }
+    else if(is.eof()){
+        std::cout << "Binary: End of file error (eofbit)" << std::endl;
+    }
+    else if(is.bad()){
+        std::cout << "Binary: Read/Write error (badbit)" << std::endl;
+    }
+    else if(is.fail()){
+        std::cout << "Binary: Logical error (badbit)" << std::endl;
     }
     else{
-        std::cout << "The state of this stream is not good (no eofbit, badbit, failbit)" << std::endl;
+        std::cout << "Binary: Unknown error with i/o" << std::endl;
     }
   if (!is.is_open()) {
     return false;
@@ -23,12 +32,21 @@ bool load_binary_data(T data[], int length, const std::string& file_path) {
 template <class T>
 bool load_text_data(T array[], int length, const std::string& file_path) {
   std::ifstream is(file_path.c_str());
-  if(is.good()){
-      std::cout << "The state of this stream is good (no eofbit, badbit, failbit)" << std::endl;
-  }
-  else{
-      std::cout << "The state of this stream is not good (no eofbit, badbit, failbit)" << std::endl;
-  }
+    if(is.good()){
+        std::cout << "Text: The state of this stream is good (goodbit)" << std::endl;
+    }
+    else if(is.eof()){
+        std::cout << "Text: End of file error (eofbit)" << std::endl;
+    }
+    else if(is.bad()){
+        std::cout << "Text: Read/Write error (badbit)" << std::endl;
+    }
+    else if(is.fail()){
+        std::cout << "Text: Logical error (badbit)" << std::endl;
+    }
+    else{
+        std::cout << "Text: Unknown error with i/o" << std::endl;
+    }
   if (!is.is_open()) {
     return false;
   }
