@@ -661,6 +661,7 @@ class Alex {
     T min_key = values[0].first;
     T max_key = values[num_keys - 1].first;
     root_node_->model_.a_ = 1.0 / (max_key - min_key);
+    // todo: understand this y-int function below
     root_node_->model_.b_ = -1.0 * min_key * root_node_->model_.a_;
     std::cout << "Created temporary root model" << std::endl;
 
@@ -746,6 +747,7 @@ class Alex {
                         data_node_type::kInitDensity_ &&
         (node->cost_ < kNodeLookupsWeight || node->model_.a_ == 0)) {
         std::cout << "in the if condition" << std::endl;
+        std::cout << "node level (if): " + node->level_ << std::endl;
       stats_.num_data_nodes++;
       auto data_node = new (data_node_allocator().allocate(1))
           data_node_type(node->level_, derived_params_.max_data_node_slots,
@@ -765,6 +767,7 @@ class Alex {
     std::pair<int, double> best_fanout_stats;
     if (experimental_params_.fanout_selection_method == 0) {
         std::cout << "in the second if condition" << std::endl;
+        std::cout << "node level (2if): " + node->level_ << std::endl;
       int max_data_node_keys = static_cast<int>(
           derived_params_.max_data_node_slots * data_node_type::kInitDensity_);
       best_fanout_stats = fanout_tree::find_best_fanout_bottom_up<T, P>(
@@ -870,6 +873,7 @@ class Alex {
       data_node->cost_ = node->cost_;
       delete_node(node);
       node = data_node;
+      std::cout << "node level (data node conversion): " + node->level_ << std::endl;
     }
   }
 
