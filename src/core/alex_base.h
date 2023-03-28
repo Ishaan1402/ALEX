@@ -93,10 +93,14 @@ class LinearModelBuilder {
 
   inline void add(T x, int y) {
     count_++;
+
+    //incremental sums
     x_sum_ += static_cast<long double>(x);
     y_sum_ += static_cast<long double>(y);
     xx_sum_ += static_cast<long double>(x) * x;
     xy_sum_ += static_cast<long double>(x) * y;
+
+    //non-incremental operations
     x_min_ = std::min<T>(x, x_min_);
     x_max_ = std::max<T>(x, x_max_);
     y_min_ = std::min<double>(y, y_min_);
@@ -110,6 +114,7 @@ class LinearModelBuilder {
       return;
     }
 
+
     if (static_cast<long double>(count_) * xx_sum_ - x_sum_ * x_sum_ == 0) {
       // all values in a bucket have the same key.
       model_->a_ = 0;
@@ -117,6 +122,7 @@ class LinearModelBuilder {
       return;
     }
 
+    // todo: understand slope math used below
     auto slope = static_cast<double>(
         (static_cast<long double>(count_) * xy_sum_ - x_sum_ * y_sum_) /
         (static_cast<long double>(count_) * xx_sum_ - x_sum_ * x_sum_));
@@ -128,6 +134,7 @@ class LinearModelBuilder {
     // If floating point precision errors, fit spline
     if (model_->a_ <= 0) {
       model_->a_ = (y_max_ - y_min_) / (x_max_ - x_min_);
+      // todo: understand y-int math below
       model_->b_ = -static_cast<double>(x_min_) * model_->a_;
     }
   }
@@ -248,6 +255,7 @@ class ExpectedShiftsAccumulator : public StatAccumulator {
   explicit ExpectedShiftsAccumulator(int data_capacity)
       : data_capacity_(data_capacity) {}
 
+      //todo: understand accumulate method
   // A dense region of n keys will contribute a total number of expected shifts
   // of approximately
   // ((n-1)/2)((n-1)/2 + 1) = n^2/4 - 1/4
