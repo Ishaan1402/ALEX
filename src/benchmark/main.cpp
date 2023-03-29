@@ -160,11 +160,11 @@ int main(int argc, char* argv[]) {
                 << cumulative_operations / cumulative_time * 1e9 << " ops/sec"
                 << "\n\tdata size:\t"
                 << index.data_size()
-                << " model size:\t"
+                << "\tmodel size:\t"
                 << index.model_size()
                 << "\n\tnumber of nodes:\t"
                 << index.num_nodes()
-                << " number of data nodes:\t"
+                << "\tnumber of data nodes:\t"
                 << index.num_leaves()
                 << std::endl;
     }
@@ -194,6 +194,14 @@ int main(int argc, char* argv[]) {
             << cumulative_inserts / cumulative_insert_time * 1e9
             << " inserts/sec,\t"
             << cumulative_operations / cumulative_time * 1e9 << " ops/sec"
+            << "\n\tfinal data size:\t"
+            << index.data_size()
+            << "\tfinal model size:\t"
+            << index.model_size()
+            << "\n\tfinal number of nodes:\t"
+            << index.num_nodes()
+            << "\tfinal number of data nodes:\t"
+            << index.num_leaves()
             << std::endl;
 
   delete[] keys;
