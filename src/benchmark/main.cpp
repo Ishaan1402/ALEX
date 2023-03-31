@@ -204,6 +204,8 @@ int main(int argc, char* argv[]) {
             << index.num_nodes()
             << "\tfinal number of data nodes:\t"
             << index.num_leaves()
+            << "\n\tfinal number of model nodes:\t"
+            << index.stats_.num_model_nodes
             << std::endl;
 
   delete[] keys;
