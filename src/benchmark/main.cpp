@@ -166,6 +166,8 @@ int main(int argc, char* argv[]) {
                 << index.num_nodes()
                 << "\tnumber of data nodes:\t"
                 << index.num_leaves()
+                << "\nnumber of model nodes:\t"
+                << index.stats_.num_model_nodes
                 << std::endl;
     }
 
