@@ -654,9 +654,9 @@ class Alex {
 
     // Build temporary root model, which outputs a CDF in the range [0, 1]
     std::cout << "Creating temporary root model..." << std::endl;
-
-      auto empty_data_node = new (data_node_allocator().allocate(1))
-              data_node_type(key_less_, allocator_);
+//
+//      auto empty_data_node = new (data_node_allocator().allocate(1))
+//              data_node_type(key_less_, allocator_);
     root_node_ =
         new (model_node_allocator().allocate(1)) model_node_type(0, allocator_);
     T min_key = values[0].first;
@@ -837,6 +837,7 @@ class Alex {
         child_node->duplication_factor_ =
             static_cast<uint8_t>(best_fanout_tree_depth - tree_node.level);
         int repeats = 1 << child_node->duplication_factor_;
+        //is this the cdf bounds?
         double left_value = static_cast<double>(cur) / fanout;
         double right_value = static_cast<double>(cur + repeats) / fanout;
         double left_boundary = (left_value - node->model_.b_) / node->model_.a_;
