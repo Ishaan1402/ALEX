@@ -168,6 +168,8 @@ int main(int argc, char* argv[]) {
                 << index.num_leaves()
                 << "\n\tnumber of model nodes:\t"
                 << index.stats_.num_model_nodes
+                << "\tcurr tree height: \t"
+                << index.stats_.rmiLevel
                 << std::endl;
     }
 
@@ -206,6 +208,8 @@ int main(int argc, char* argv[]) {
             << index.num_leaves()
             << "\n\tfinal number of model nodes:\t"
             << index.stats_.num_model_nodes
+            << "\tfinal tree height: \t"
+            << index.stats_.rmiLevel
             << std::endl;
 
   delete[] keys;

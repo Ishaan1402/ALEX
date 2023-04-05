@@ -125,6 +125,7 @@ class Alex {
     long long num_inserts = 0;
     double splitting_time = 0;
     double cost_computation_time = 0;
+    int rmiLevel = 1;
   };
   Stats stats_;
 
@@ -746,8 +747,8 @@ class Alex {
     if (num_keys <= derived_params_.max_data_node_slots *
                         data_node_type::kInitDensity_ &&
         (node->cost_ < kNodeLookupsWeight || node->model_.a_ == 0)) {
-        std::cout << "in the if condition" << std::endl;
-        std::cout << "node level (if): " << (int)node->level_ << std::endl;
+        std::cout << "convert to data node (if)" << std::endl;
+   //     std::cout << "node level (if): " << (int)node->level_ << std::endl;
       stats_.num_data_nodes++;
       auto data_node = new (data_node_allocator().allocate(1))
           data_node_type(node->level_, derived_params_.max_data_node_slots,
@@ -760,14 +761,15 @@ class Alex {
       return;
     }
 
-      std::cout << "in the else part" << std::endl;
+
     // Use a fanout tree to determine the best way to divide the key space into
     // child nodes
     std::vector<fanout_tree::FTNode> used_fanout_tree_nodes;
     std::pair<int, double> best_fanout_stats;
     if (experimental_params_.fanout_selection_method == 0) {
-        std::cout << "in the second if condition" << std::endl;
-        std::cout << "node level (2if): " << (int)node->level_ << std::endl;
+        std::cout << "continue as model node (else) bottom-up" << std::endl;
+//        std::cout << "in the second if condition" << std::endl;
+//        std::cout << "node level (2if): " << (int)node->level_ << std::endl;
       int max_data_node_keys = static_cast<int>(
           derived_params_.max_data_node_slots * data_node_type::kInitDensity_);
       best_fanout_stats = fanout_tree::find_best_fanout_bottom_up<T, P>(
@@ -776,7 +778,7 @@ class Alex {
           params_.expected_insert_frac, params_.approximate_model_computation,
           params_.approximate_cost_computation, key_less_);
     } else if (experimental_params_.fanout_selection_method == 1) {
-        std::cout << "in the else-if condition" << std::endl;
+        std::cout << "continue as model node (else) top-down" << std::endl;
       best_fanout_stats = fanout_tree::find_best_fanout_top_down<T, P>(
           values, num_keys, node, total_keys, used_fanout_tree_nodes,
           derived_params_.max_fanout, params_.expected_insert_frac,
@@ -787,6 +789,7 @@ class Alex {
     double best_fanout_tree_cost = best_fanout_stats.second;
 
     // Decide whether this node should be a model node or data node
+    // fanning out is cheaper than keeping the node as is
     if (best_fanout_tree_cost < node->cost_ ||
         num_keys > derived_params_.max_data_node_slots *
                        data_node_type::kInitDensity_) {
@@ -814,6 +817,9 @@ class Alex {
             params_.expected_insert_frac, params_.approximate_model_computation,
             params_.approximate_cost_computation);
       }
+
+      // creating 2^(best_fanout_tree_depth) children and declaring them
+      // todo: increment node level variable to print
       int fanout = 1 << best_fanout_tree_depth;
       model_node->model_.a_ = node->model_.a_ * fanout;
       model_node->model_.b_ = node->model_.b_ * fanout;
@@ -1208,6 +1214,7 @@ class Alex {
               derived_params_.max_fanout);
         }
         int best_fanout = 1 << fanout_tree_depth;
+          stats_.rmiLevel += fanout_tree_depth;
         stats_.cost_computation_time +=
             std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::high_resolution_clock::now() - start_time)
