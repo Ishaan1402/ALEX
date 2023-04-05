@@ -747,7 +747,7 @@ class Alex {
     if (num_keys <= derived_params_.max_data_node_slots *
                         data_node_type::kInitDensity_ &&
         (node->cost_ < kNodeLookupsWeight || node->model_.a_ == 0)) {
-        std::cout << "convert to data node (if)" << std::endl;
+    //    std::cout << "convert to data node (if)" << std::endl;
    //     std::cout << "node level (if): " << (int)node->level_ << std::endl;
       stats_.num_data_nodes++;
       auto data_node = new (data_node_allocator().allocate(1))
@@ -767,7 +767,7 @@ class Alex {
     std::vector<fanout_tree::FTNode> used_fanout_tree_nodes;
     std::pair<int, double> best_fanout_stats;
     if (experimental_params_.fanout_selection_method == 0) {
-        std::cout << "continue as model node (else) bottom-up" << std::endl;
+//        std::cout << "continue as model node (else) bottom-up" << std::endl;
 //        std::cout << "in the second if condition" << std::endl;
 //        std::cout << "node level (2if): " << (int)node->level_ << std::endl;
       int max_data_node_keys = static_cast<int>(
@@ -778,7 +778,7 @@ class Alex {
           params_.expected_insert_frac, params_.approximate_model_computation,
           params_.approximate_cost_computation, key_less_);
     } else if (experimental_params_.fanout_selection_method == 1) {
-        std::cout << "continue as model node (else) top-down" << std::endl;
+  //      std::cout << "continue as model node (else) top-down" << std::endl;
       best_fanout_stats = fanout_tree::find_best_fanout_top_down<T, P>(
           values, num_keys, node, total_keys, used_fanout_tree_nodes,
           derived_params_.max_fanout, params_.expected_insert_frac,
@@ -794,7 +794,7 @@ class Alex {
         num_keys > derived_params_.max_data_node_slots *
                        data_node_type::kInitDensity_) {
       // Convert to model node based on the output of the fanout tree
-      std::cout << "Convert to model node based on the output of the fanout tree" << std::endl;
+ //     std::cout << "Convert to model node based on the output of the fanout tree" << std::endl;
       stats_.num_model_nodes++;
       auto model_node = new (model_node_allocator().allocate(1))
           model_node_type(node->level_, allocator_);
@@ -828,7 +828,7 @@ class Alex {
           new (pointer_allocator().allocate(fanout)) AlexNode<T, P>*[fanout];
 
       // Instantiate all the child nodes and recurse
-      std::cout << "going to Instantiate all the child nodes and recurse" << std::endl;
+//      std::cout << "going to Instantiate all the child nodes and recurse" << std::endl;
       int cur = 0;
       for (fanout_tree::FTNode& tree_node : used_fanout_tree_nodes) {
         auto child_node = new (model_node_allocator().allocate(1))
@@ -869,7 +869,7 @@ class Alex {
       node = model_node;
     } else {
       // Convert to data node
-      std::cout << "Convert to data node" << std::endl;
+  //    std::cout << "Convert to data node" << std::endl;
       stats_.num_data_nodes++;
       auto data_node = new (data_node_allocator().allocate(1))
           data_node_type(node->level_, derived_params_.max_data_node_slots,
@@ -879,7 +879,7 @@ class Alex {
       data_node->cost_ = node->cost_;
       delete_node(node);
       node = data_node;
-      std::cout << "node level (data node conversion): " << (int)node->level_ << std::endl;
+  //    std::cout << "node level (data node conversion): " << (int)node->level_ << std::endl;
     }
   }
 
