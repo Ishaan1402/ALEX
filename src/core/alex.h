@@ -837,7 +837,7 @@ class Alex {
         child_node->duplication_factor_ =
             static_cast<uint8_t>(best_fanout_tree_depth - tree_node.level);
         int repeats = 1 << child_node->duplication_factor_;
-        //is this the cdf bounds?
+        //is this cdf bounds?
         double left_value = static_cast<double>(cur) / fanout;
         double right_value = static_cast<double>(cur + repeats) / fanout;
         double left_boundary = (left_value - node->model_.b_) / node->model_.a_;
