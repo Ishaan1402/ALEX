@@ -108,6 +108,10 @@ int main(int argc, char* argv[]) {
         return 1;
       }
       auto lookups_start_time = std::chrono::high_resolution_clock::now();
+
+      // add pragma omp statement to parallelize + reduction(+:sum)? -> #pragma omp parallel for reduction(+:sum)
+      // reduction creates a private copy of sum for all threads and accumulates. At the end of the parallel region,
+      // all the sums from each thread are added up for a final sum (using atomic operation?).
       for (int j = 0; j < num_lookups_per_batch; j++) {
         KEY_TYPE key = lookup_keys[j];
         PAYLOAD_TYPE* payload = index.get_payload(key);
@@ -115,6 +119,8 @@ int main(int argc, char* argv[]) {
           sum += *payload;
         }
       }
+      // end potential pragma omp statement
+
       auto lookups_end_time = std::chrono::high_resolution_clock::now();
       batch_lookup_time = std::chrono::duration_cast<std::chrono::nanoseconds>(
                               lookups_end_time - lookups_start_time)
